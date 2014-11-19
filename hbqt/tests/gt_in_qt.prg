@@ -14,26 +14,17 @@
 
 
 FUNCTION Main()
-
-   SetMode( 25, 80 )
-
-   DO WHILE .T.
-      IF Alert( "Execute Qt Widget ?", { "Yes","No" } ) <> 1
-         EXIT
-      ENDIF
-      MyQtWidget()
-   ENDDO
-
-   RETURN NIL
-
-
-FUNCTION MyQtWidget()
-   LOCAL oWnd
+   LOCAL oWnd, oBtn
    LOCAL lDone := .f.
 
-   oWnd := QPlainTextEdit()
+   oWnd := QWidget()
    oWnd:show()
    oWnd:connect( QEvent_Close, {|| lDone := .t. } )
+
+   oBtn := QPushButton( "Activate a GT Window", oWnd )
+   oBtn:move( 100, 100 )
+   oBtn:show()
+   oBtn:connect( "clicked()", {|| MyGtWindow() } )
 
    // NOTE: we cannot use QApplication():exec() here because
    //       QApplication must remain alive for the lifetime
@@ -46,9 +37,27 @@ FUNCTION MyQtWidget()
    RETURN NIL
 
 
+FUNCTION MyGtWindow()
+   LOCAL nSecs
+
+   hb_gtReload( "QTC" )
+
+   SetMode( 25, 80 )
+
+   nSecs := Seconds()
+   DO WHILE Inkey( 0.1 ) != 27
+      IF Seconds() - nSecs > 2
+         ? Time()
+         nSecs := Seconds()
+      ENDIF
+   ENDDO
+
+   RETURN NIL
+
+
 FUNCTION hb_gtSys()
 
-   REQUEST HB_GT_WIN_DEFAULT
+   REQUEST HB_GT_QTC_DEFAULT
    REQUEST HB_GT_WVT
 
    RETURN NIL
