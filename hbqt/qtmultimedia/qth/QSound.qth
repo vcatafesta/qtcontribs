@@ -14,11 +14,11 @@
 <CLASS>
 Inherit     = 
 Type        = Core
-VersionUpto = 0x040900
+Version     = 0x050000
 </CLASS>
 
 <CODE>
-#include <QtGui/QSound>
+#include <QtMultimedia/QSound>
 
 /*
  * QSound ( const QString & filename, QObject * parent = 0 )
